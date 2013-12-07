@@ -32,10 +32,11 @@ while ($line=<INF>) {
     my @cells = split(/\t/, $line);
     
     my $n = scalar @cells;
-    my $nsets = $n/5 - 2; # we will skip the first and the last 5 columns 
+    my $nsets = $n/5 - 1; # we will skip the first and the last 5 columns 
     # get base which will repeat for the remaining 5-ples of columns
     my $base = $cancerType."\t".join("\t", @cells[0..4]);
     $base =~ s/\"//g;
+    if($cells[0] eq "PTEN"){print($base."\n");}
   
     if($base !~ /^\NA+$/){
       for(my $idx=1; $idx < $nsets; $idx++){
@@ -45,9 +46,14 @@ while ($line=<INF>) {
     	$check =~ s/\"//g;
 	chomp($check);
       	if($check ne "" && $check !~ /^\s*NA{1,5}\s*/){ 
-		my $add = join("\t", @cells[$start..$end]);
-      		$add =~ s/\"//g;
-      		print OUTF "$base\t$add\n";
+		my @thercon = split(",", $cells[$start+1]);
+		foreach(@thercon) {
+			#print($cells[$start+1]."\n");
+		        $_ =~ s/^\s+|\s+$//g;      
+			my $add = join("\t", $cells[$start], $_, @cells[$start+2..$end]);
+      			$add =~ s/\"//g;
+      			print OUTF "$base\t$add\n";
+		}
       	}
     }
   }

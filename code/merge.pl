@@ -17,11 +17,14 @@ my $finm = shift(); # merged file
 my $findb = shift(); # knowledge base
 
 my $base = (split('\.', $finm))[0];
-my $fout = $base.".maf.tsv";
+my $fout = "/home/onikolov/projects/gold_standard/results/Merged_CCLE_Sanger_Kdb.maf.tsv";
 
 open INFM, "<$finm" or die "Cannot open input file $finm...\n";
 open INFDB, "<$findb" or die "Cannot open input file $findb...\n";
 open OUTF, ">>$fout" or die "Cannot open output file $fout...\n";
+
+# print header
+print OUTF "Cancer type\tGene\tVariant\tDescription\tEffect\tPathway\tAssociation\tTherapeutic context\tStatus\tEvidence\tPMID\tAnnotation\n";
 
 my %dbhash = ();
 
